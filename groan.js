@@ -1,3 +1,7 @@
+function byteCount(s) {
+  return encodeURI(s).split(/%..|./).length - 1;
+}
+
 function PHParse(str) {
   var o = { str: str, pos: 0 };
   if (str.indexOf('|') === -1)
@@ -20,6 +24,11 @@ var __PHParseValue = function(o) {
   if (type === 's') {
     idelim = o.str.indexOf(':', o.pos);
     len = parseInt(o.str.substring(o.pos, idelim), 10);
+    
+    for (var i=0; i<len; i++) {
+      len -= byteCount(o.str.substring(idelim+2+i,idelim+3+i)) -1;
+    }
+
     o.pos = idelim + 2;
     v = o.str.substr(o.pos, len);
     o.pos += len + 2;
